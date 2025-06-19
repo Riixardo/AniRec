@@ -1,8 +1,17 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# model
+model_files/
+
+# model training data
+data/
+
+# helper files
+helpers/
+
 # dependencies
-/node_modules
-/.pnp
+node_modules
+.pnp
 .pnp.js
 
 # testing
