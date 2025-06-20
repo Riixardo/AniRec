@@ -9,6 +9,12 @@ data/
 # helper files
 helpers/
 
+# nextjs stuff
+.next/
+
+# pycache
+__pycache__/
+
 # dependencies
 node_modules
 .pnp
