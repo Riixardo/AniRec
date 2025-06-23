@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 export default function AnimeAtlasCard({ anime, onClose }) {
   if (!anime) return null;
 
@@ -12,10 +14,12 @@ export default function AnimeAtlasCard({ anime, onClose }) {
           ✕
         </button>
         
-        <img
+        <Image
           src={anime.image_url}
           alt={anime.title}
-          className="w-14 h-32 object-cover rounded-t-sm mb-3"
+          width={80}
+          height={128}
+          className="w-20 h-32 object-cover rounded-t-sm mb-1"
           onError={(e) => {
             e.target.src = 'https://via.placeholder.com/256x128/111111/FFFFFF?text=No+Image';
           }}

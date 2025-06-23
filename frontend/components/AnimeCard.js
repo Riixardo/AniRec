@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import Image from 'next/image';
 
 const AnimeCard = ({ anime }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -35,9 +36,11 @@ const AnimeCard = ({ anime }) => {
         {/* Image Section */}
         <div className="w-1/5">
           {image_url ? (
-            <img 
+            <Image 
               src={image_url} 
               alt={title}
+              width={192}
+              height={400}
               className="w-48 h-full object-cover"
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/300x400/111111/FFFFFF?text=No+Image';

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function AnimeTimelineCard({ anime }) {
   const [expanded, setExpanded] = useState(false);
@@ -35,9 +36,11 @@ export default function AnimeTimelineCard({ anime }) {
       <div className="flex items-start space-x-4">
         {/* Anime Image */}
         <div className="flex-shrink-0">
-          <img
+          <Image
             src={anime.image_url || '/placeholder-image.jpg'}
             alt={anime.title}
+            width={64}
+            height={96}
             className="w-16 h-24 object-cover rounded"
             onError={(e) => {
               e.target.src = '/placeholder-image.jpg';

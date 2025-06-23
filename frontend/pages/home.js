@@ -25,18 +25,6 @@ export default function HomePage() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const storedUsername = sessionStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
-      const shouldFetch = sessionStorage.getItem('shouldFetchOnLoad') === 'true';
-      if (shouldFetch) {
-        sessionStorage.removeItem('shouldFetchOnLoad');
-        handleGetRecommendations(storedUsername);
-      }
-    }
-  }, []);
-
   const tabs = [
     { id: 'recommendations', name: 'Recommendations' },
     { id: 'statistics', name: 'Statistics' },
@@ -157,6 +145,18 @@ export default function HomePage() {
       setIsFiltering(false);
     }
   };
+
+  useEffect(() => {
+    const storedUsername = sessionStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+      const shouldFetch = sessionStorage.getItem('shouldFetchOnLoad') === 'true';
+      if (shouldFetch) {
+        sessionStorage.removeItem('shouldFetchOnLoad');
+        handleGetRecommendations(storedUsername);
+      }
+    }
+  }, []);
 
   const totalPages = Math.ceil(totalFilteredCount / 20);
 
