@@ -171,7 +171,7 @@ export default function HomePage() {
       case 'statistics':
         return <StatisticsPage username={username} userStats={userStats} userAnimeDetails={userAnimeDetails} />;
       case 'timeline':
-        return <TimelinePage username={username} recommendations={recommendations} userStats={userStats} />;
+        return <TimelinePage username={username} userAnimeDetails={userAnimeDetails} />;
       case 'atlas':
         return <AtlasMapPage username={username} recommendations={recommendations} userStats={userStats} />;
       default:

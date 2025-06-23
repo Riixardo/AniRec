@@ -57,7 +57,7 @@ export default function RecommendationsPage({
               )}
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-semibold">
-                  Recommendations for {username}
+                  Recommendations 
                 </h2>
                 <span className="text-gray-400">
                   {totalFilteredCount} results

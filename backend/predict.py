@@ -98,7 +98,7 @@ def predict_scores(username, dataset, model, df):
                 "X-MAL-CLIENT-ID": CLIENT_ID
             }
 
-    url = f"https://api.myanimelist.net/v2/users/{username}/animelist?nsfw=true&limit=1000&fields=list_status,genres,start_season"
+    url = f"https://api.myanimelist.net/v2/users/{username}/animelist?nsfw=true&limit=1000&fields=list_status,genres,start_season,media_type,main_picture"
 
     new_user_data = []
 
@@ -114,6 +114,7 @@ def predict_scores(username, dataset, model, df):
                 anime = entry["node"]
                 list_status = entry["list_status"]
                 start_season = anime.get("start_season", {})
+                main_picture = anime.get("main_picture", {})
                 
                 new_user_data.append({
                     "username": username,
@@ -125,7 +126,9 @@ def predict_scores(username, dataset, model, df):
                     "start_date": list_status.get("start_date"),
                     "finish_date": list_status.get("finish_date"),
                     "start_season_year": start_season.get("year"),
-                    "start_season_season": start_season.get("season")
+                    "start_season_season": start_season.get("season"),
+                    "media_type": anime.get("media_type"),
+                    "image_url": main_picture.get("large") or main_picture.get("medium")
                 })
             url = data["paging"].get("next", "")
         else:
@@ -210,7 +213,9 @@ def predict_scores(username, dataset, model, df):
                 'start_date': anime['start_date'],
                 'finish_date': anime['finish_date'],
                 'start_year': anime['start_season_year'],
-                'start_season': anime['start_season_season']
+                'start_season': anime['start_season_season'],
+                'media_type': anime['media_type'],
+                'image_url': anime['image_url']
             } for anime in new_user_data
         ]
     }
