@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --glow-color: #ffffff;
+  --accent-color: #ff00ff;
+  --success-color: #00ff00;
+  --warning-color: #ffff00;
+  --error-color: #ff0000;
 }
 
 @theme inline {
@@ -14,8 +19,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #000000;
+    --foreground: #ffffff;
   }
 }
 
@@ -23,4 +28,54 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Glow effects */
+.glow-text {
+  text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color), 0 0 30px var(--glow-color);
+}
+
+.glow-border {
+  box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color), inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.glow-button {
+  box-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
+  transition: all 0.3s ease;
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 15px var(--glow-color), 0 0 30px var(--glow-color), 0 0 45px var(--glow-color);
+  transform: translateY(-2px);
+}
+
+/* High contrast elements */
+.high-contrast-bg {
+  background: #111111;
+  border: 1px solid #333333;
+}
+
+.high-contrast-text {
+  color: #ffffff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+}
+
+.accent-glow {
+  color: var(--accent-color);
+  text-shadow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+}
+
+.success-glow {
+  color: var(--success-color);
+  text-shadow: 0 0 10px var(--success-color), 0 0 20px var(--success-color);
+}
+
+.warning-glow {
+  color: var(--warning-color);
+  text-shadow: 0 0 10px var(--warning-color), 0 0 20px var(--warning-color);
+}
+
+.error-glow {
+  color: var(--error-color);
+  text-shadow: 0 0 10px var(--error-color), 0 0 20px var(--error-color);
 }

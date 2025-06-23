@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import RecommendationsPage from '../components/RecommendationsPage';
 import StatisticsPage from '../components/StatisticsPage';
 import TimelinePage from '../components/TimelinePage';
@@ -18,10 +19,23 @@ export default function HomePage() {
   const [maxUsers, setMaxUsers] = useState(4200000);
   const [userStats, setUserStats] = useState(null);
   const [userAnimeDetails, setUserAnimeDetails] = useState([]);
-  const [loading, setLoading] = useState(false);
 
   // Ref for all recommendation IDs
   const itemScorePairsSortedRef = useRef([]);
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedUsername = sessionStorage.getItem('username');
+    if (storedUsername) {
+      setUsername(storedUsername);
+      const shouldFetch = sessionStorage.getItem('shouldFetchOnLoad') === 'true';
+      if (shouldFetch) {
+        sessionStorage.removeItem('shouldFetchOnLoad');
+        handleGetRecommendations(storedUsername);
+      }
+    }
+  }, []);
 
   const tabs = [
     { id: 'recommendations', name: 'Recommendations' },
@@ -30,7 +44,8 @@ export default function HomePage() {
     { id: 'atlas', name: 'Atlas Map' }
   ];
 
-  const handleGetRecommendations = async () => {
+  const handleGetRecommendations = async (userToFetch) => {
+    const finalUsername = userToFetch || username;
     setError('');
     setRecommendations(null);
     setUserStats(null);
@@ -43,7 +58,7 @@ export default function HomePage() {
     setMinUsers(0);
     setMaxUsers(4200000);
 
-    if (!username) {
+    if (!finalUsername) {
       setError('Please enter a username.');
       return;
     }
@@ -53,7 +68,7 @@ export default function HomePage() {
       const response = await fetch('http://localhost:8000/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username }),
+        body: JSON.stringify({ username: finalUsername }),
       });
 
       if (!response.ok) {
@@ -64,7 +79,7 @@ export default function HomePage() {
       const data = await response.json();
       setRecommendations(data.recommendations);
       setUserStats(data.user_stats);
-      setUserAnimeDetails(data.user_stats?.user_anime_details || []);
+      setUserAnimeDetails(data.user_anime_details || []);
       itemScorePairsSortedRef.current = data.item_score_pairs_sorted;
       setTotalFilteredCount(data.item_score_pairs_sorted.length);
     } catch (err) {
@@ -169,11 +184,11 @@ export default function HomePage() {
           totalPages={totalPages}
         />;
       case 'statistics':
-        return <StatisticsPage username={username} userStats={userStats} userAnimeDetails={userAnimeDetails} />;
+        return <StatisticsPage userStats={userStats} />;
       case 'timeline':
-        return <TimelinePage username={username} userAnimeDetails={userAnimeDetails} />;
+        return <TimelinePage userAnimeDetails={userAnimeDetails} />;
       case 'atlas':
-        return <AtlasMapPage username={username} recommendations={recommendations} userStats={userStats} />;
+        return <AtlasMapPage/>;
       default:
         return <RecommendationsPage 
           username={username} 
@@ -199,16 +214,18 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="bg-gray-800 border-b border-gray-700">
-        <div className="max-w-6xl mx-auto px-8 py-6">
-          <h1 className="text-4xl font-bold text-center">Anime Recommender</h1>
-        </div>
+      <div className="high-contrast-bg border-b border-gray-700">
+      <div className="max-w-6xl mx-auto px-8 py-6 flex justify-center items-center">
+        <button onClick={() => {router.push('/')}} className="text-4xl font-bold text-center glow-text focus:outline-none hover:text-black">
+          AniRec
+        </button>
+      </div>
       </div>
 
       {/* Navigation Tabs with Username Input */}
-      <div className="bg-gray-800 border-b border-gray-700">
+      <div className="high-contrast-bg border-b border-gray-700">
         <div className="max-w-6xl mx-auto px-8">
           <div className="flex items-center justify-between">
             {/* Tabs */}
@@ -219,7 +236,7 @@ export default function HomePage() {
                   onClick={() => setActiveTab(tab.id)}
                   className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-400'
+                      ? 'border-white text-white glow-text'
                       : 'border-transparent text-gray-300 hover:text-white hover:border-gray-300'
                   }`}
                 >
@@ -235,11 +252,11 @@ export default function HomePage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Enter MyAnimeList username"
-                className="p-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white text-sm"
+                className="p-2 rounded-md high-contrast-bg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white focus:glow-border text-white text-sm"
               />
               <button
-                onClick={handleGetRecommendations}
-                className="p-2 text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors text-sm"
+                onClick={() => handleGetRecommendations()}
+                className="p-2 text-white bg-gray-700 rounded-md hover:bg-gray-600 transition-colors text-sm"
               >
                 Get Recommendations
               </button>

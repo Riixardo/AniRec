@@ -51,12 +51,12 @@ export default function RecommendationsPage({
           {recommendations && (
             <div className="relative">
               {isFiltering && (
-                <div className="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-10">
-                  <p className="text-xl">Filtering...</p>
+                <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+                  <p className="text-xl high-contrast-text">Filtering...</p>
                 </div>
               )}
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-semibold">
+                <h2 className="text-2xl font-semibold high-contrast-text">
                   Recommendations 
                 </h2>
                 <span className="text-gray-400">
@@ -75,7 +75,7 @@ export default function RecommendationsPage({
                   <button
                     onClick={() => onPageChange(currentPage - 1)}
                     disabled={currentPage === 1 || isFiltering}
-                    className="px-4 py-2 bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 high-contrast-bg rounded disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Previous
                   </button>
@@ -85,7 +85,7 @@ export default function RecommendationsPage({
                   <button
                     onClick={() => onPageChange(currentPage + 1)}
                     disabled={currentPage === totalPages || isFiltering}
-                    className="px-4 py-2 bg-gray-700 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-2 high-contrast-bg rounded disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Next
                   </button>

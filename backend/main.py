@@ -72,9 +72,14 @@ class PredictRequest(BaseModel):
 
 @app.post("/predict")
 async def predict(request: PredictRequest):
-    top_20_predictions, item_score_pairs_sorted, user_stats = predict_scores(request.username, data_store["dataset"], data_store["model"], data_store["csv"])
+    top_20_predictions, item_score_pairs_sorted, user_stats, user_anime_details = predict_scores(request.username, data_store["dataset"], data_store["model"], data_store["csv"])
     
-    return {"recommendations": top_20_predictions, "item_score_pairs_sorted": item_score_pairs_sorted, "user_stats": user_stats}
+    return {
+        "recommendations": top_20_predictions, 
+        "item_score_pairs_sorted": item_score_pairs_sorted, 
+        "user_stats": user_stats,
+        "user_anime_details": user_anime_details
+    }
 
 class FilteredPredictRequest(BaseModel):
     item_score_pairs_sorted: List[List[float]]
@@ -133,6 +138,31 @@ async def get_atlas_data():
         # Log the error for debugging
         print(f"Error loading atlas data: {e}")
         raise HTTPException(status_code=500, detail="An error occurred while loading the atlas data.")
+
+@app.get("/get/anime/{anime_id}")
+async def get_anime_details(anime_id: int):
+    try:
+        anime_df = data_store["csv"]
+        
+        # Ensure 'anime_id' is the correct type for comparison
+        anime_df['anime_id'] = anime_df['anime_id'].astype(int)
+        
+        anime_data = anime_df[anime_df['anime_id'] == anime_id]
+        
+        if anime_data.empty:
+            raise HTTPException(status_code=404, detail="Anime not found")
+            
+        # Select specific details to return
+        anime_details = anime_data.iloc[0]
+        return {
+            "title": anime_details.get('title', 'Unknown'),
+            "image_url": anime_details.get('image_url', ''),
+            "mean": float(anime_details.get('mean', 0.0)),
+            "num_list_users": int(anime_details.get('num_list_users', 0))
+        }
+    except Exception as e:
+        print(f"Error fetching anime details: {e}")
+        raise HTTPException(status_code=500, detail="An error occurred while fetching anime details.")
 
 @app.get("/hello")
 def read_root():

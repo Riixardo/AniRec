@@ -31,7 +31,7 @@ export default function AnimeTimelineCard({ anime }) {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg p-4 mb-3 border border-gray-700 hover:border-gray-600 transition-colors">
+    <div className="high-contrast-bg rounded-sm p-4 mb-3 border border-gray-700 hover:border-gray-600 transition-colors">
       <div className="flex items-start space-x-4">
         {/* Anime Image */}
         <div className="flex-shrink-0">
@@ -49,7 +49,7 @@ export default function AnimeTimelineCard({ anime }) {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-white mb-1 truncate whitespace-nowrap overflow-hidden" title={anime.title}>
+              <h3 className="text-lg font-semibold high-contrast-text mb-1 truncate whitespace-nowrap overflow-hidden" title={anime.title}>
                 {anime.title}
               </h3>
               
@@ -94,7 +94,7 @@ export default function AnimeTimelineCard({ anime }) {
                       {anime.synopsis}
                       <button
                         onClick={() => setExpanded(false)}
-                        className="text-blue-400 hover:text-blue-300 ml-2 text-sm"
+                        className="text-gray-400 hover:text-white ml-2 text-sm"
                       >
                         Show Less
                       </button>
@@ -105,7 +105,7 @@ export default function AnimeTimelineCard({ anime }) {
                       {anime.synopsis.length > 150 && (
                         <button
                           onClick={() => setExpanded(true)}
-                          className="text-blue-400 hover:text-blue-300 ml-2 text-sm"
+                          className="text-gray-400 hover:text-white ml-2 text-sm"
                         >
                           Show More
                         </button>

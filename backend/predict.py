@@ -15,8 +15,6 @@ load_dotenv()
 
 def fetch_recs_from_filters(item_score_pairs_sorted, df, dataset, filters, page, page_size):
     # Get mapping from internal model ID to original anime ID
-    print(f"Fetching recommendations from filters: {filters}")
-    print(f"Length of item_score_pairs_sorted: {len(item_score_pairs_sorted)}")
     _, _, item_id_map, _ = dataset.mapping()
     internal_to_original_anime_id = {v: k for k, v in item_id_map.items()}
 
@@ -177,20 +175,20 @@ def predict_scores(username, dataset, model, df):
     else:
         print("User's anime list is empty, cannot calculate genre preferences.")
 
-    print(f"\nNew user '{username}' genre preferences:")
-    sorted_genres = sorted(new_user_genre_preferences.items(), key=lambda x: x[1], reverse=True)
-    for genre, weight in sorted_genres:
-        print(f"{genre}: {weight:.4f}")
+    # print(f"\nNew user '{username}' genre preferences:")
+    # sorted_genres = sorted(new_user_genre_preferences.items(), key=lambda x: x[1], reverse=True)
+    # for genre, weight in sorted_genres:
+    #     print(f"{genre}: {weight:.4f}")
 
-    print(f"\nNew user '{username}' score distribution:")
-    for score, count in score_distribution.items():
-        if count > 0:
-            print(f"Score {score}: {count} anime")
+    # print(f"\nNew user '{username}' score distribution:")
+    # for score, count in score_distribution.items():
+    #     if count > 0:
+    #         print(f"Score {score}: {count} anime")
 
-    print(f"\nNew user '{username}' status distribution:")
-    for status, count in status_distribution.items():
-        if count > 0:
-            print(f"{status}: {count} anime")
+    # print(f"\nNew user '{username}' status distribution:")
+    # for status, count in status_distribution.items():
+    #     if count > 0:
+    #         print(f"{status}: {count} anime")
 
     # Calculate user statistics
     user_stats = {
@@ -203,22 +201,23 @@ def predict_scores(username, dataset, model, df):
         "average_score": 0,
         "completion_rate": 0,
         "genre_counts": dict(Counter(genre_counts).most_common(15)),
-        "user_anime_details": [
-            {
-                'id': anime['anime_id'],
-                'title': anime['title'],
-                'score': anime['score'],
-                'status': anime['status'],
-                'genres': anime['genres'],
-                'start_date': anime['start_date'],
-                'finish_date': anime['finish_date'],
-                'start_year': anime['start_season_year'],
-                'start_season': anime['start_season_season'],
-                'media_type': anime['media_type'],
-                'image_url': anime['image_url']
-            } for anime in new_user_data
-        ]
     }
+
+    user_anime_details = [
+        {
+            'id': anime['anime_id'],
+            'title': anime['title'],
+            'score': anime['score'],
+            'status': anime['status'],
+            'genres': anime['genres'],
+            'start_date': anime['start_date'],
+            'finish_date': anime['finish_date'],
+            'start_year': anime['start_season_year'],
+            'start_season': anime['start_season_season'],
+            'media_type': anime['media_type'],
+            'image_url': anime['image_url']
+        } for anime in new_user_data
+    ]
     
     # Calculate average score
     total_score = sum(score * count for score, count in score_distribution.items())
@@ -364,9 +363,8 @@ def predict_scores(username, dataset, model, df):
         del model_copy
         
         # Have frontend remember the model scores for pagination
-        return recommendations, item_score_pairs_sorted, user_stats
+        return recommendations, item_score_pairs_sorted, user_stats, user_anime_details
     else:
-        # Clean up the model copy even if no recommendations
         del model_copy
         print("No recommendations could be generated for the new user.")
-        return [], [], {}
+        return [], [], {}, []

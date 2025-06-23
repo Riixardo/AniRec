@@ -30,7 +30,7 @@ const AnimeCard = ({ anime }) => {
   };
 
   return (
-    <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <div className="high-contrast-bg rounded-sm overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
       <div className="flex">
         {/* Image Section */}
         <div className="w-1/5">
@@ -40,7 +40,7 @@ const AnimeCard = ({ anime }) => {
               alt={title}
               className="w-48 h-full object-cover"
               onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/300x400/374151/FFFFFF?text=No+Image';
+                e.target.src = 'https://via.placeholder.com/300x400/111111/FFFFFF?text=No+Image';
               }}
             />
           ) : (
@@ -54,27 +54,17 @@ const AnimeCard = ({ anime }) => {
         <div className="w-4/5 p-4 flex flex-col">
           {/* Header */}
           <div className="mb-3">
-            <h3 className="text-xl font-bold text-white mb-1 line-clamp-2">
+            <h3 className="text-xl font-bold high-contrast-text mb-1 line-clamp-2">
               {title}
             </h3>
-            <div className="flex items-center gap-4 text-sm text-gray-300">
-              <span className="bg-blue-600 px-2 py-1 rounded text-xs font-medium">
-                {media_type || 'Unknown'}
-              </span>
-              <span className="bg-green-600 px-2 py-1 rounded text-xs font-medium">
-                Score: {score.toFixed(3)}
-              </span>
-            </div>
           </div>
 
           {/* Stats */}
-          <div className="flex gap-4 mb-3 text-sm text-gray-300">
-            <div>
-              <span className="font-medium">Users:</span> {num_list_users?.toLocaleString() || 'N/A'}
-            </div>
-            <div>
-              <span className="font-medium">Rating:</span> {mean ? mean.toFixed(2) : 'N/A'}
-            </div>
+          <div className="flex flex-wrap gap-2 text-xs text-gray-300 mb-3">
+            <span className="bg-green-600 px-2 py-1 rounded font-medium">AI Score: {score.toFixed(3)}</span>
+            <span className="bg-orange-600 px-2 py-1 rounded font-medium">{media_type || 'Unknown'}</span>
+            <span className="bg-purple-700 px-2 py-1 rounded font-medium">Users: {num_list_users?.toLocaleString() || 'N/A'}</span>
+            <span className="bg-blue-700 px-2 py-1 rounded font-medium">Rating: {mean ? mean.toFixed(2) : 'N/A'}</span>
           </div>
 
           {/* Genres */}
@@ -103,7 +93,7 @@ const AnimeCard = ({ anime }) => {
                   ref={synopsisRef}
                   className={`text-sm text-gray-400 mt-1 ${
                     isExpanded ? '' : 'line-clamp-3'
-                  } ${showButton && !isExpanded ? 'pr-20' : ''}`}
+                  } pr-25`}
                 >
                   {synopsis}
                 </p>
@@ -112,7 +102,7 @@ const AnimeCard = ({ anime }) => {
                 {showButton && (
                   <button
                     onClick={toggleExpansion}
-                    className="absolute bottom-0 right-0 text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors bg-gray-800 px-2 py-1 rounded"
+                    className="absolute bottom-0 right-0 text-gray-400 hover:text-white text-sm font-medium transition-colors high-contrast-bg px-2 py-1 rounded"
                   >
                     {isExpanded ? 'Show Less' : 'Show More'}
                   </button>

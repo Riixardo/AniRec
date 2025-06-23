@@ -93,16 +93,16 @@ export default function Filter({
   return (
     <>
       {/* Sidebar */}
-      <div className="w-80 bg-gray-800 p-6 min-h-screen overflow-y-auto">
-        <h2 className="text-xl font-bold mb-4">Filters</h2>
+      <div className="w-80 high-contrast-bg p-6 min-h-screen overflow-y-auto">
+        <h2 className="text-xl font-bold mb-4 high-contrast-text">Filters</h2>
         
         {/* Genres Filter */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-lg font-semibold">Genres</h3>
+            <h3 className="text-lg font-semibold high-contrast-text">Genres</h3>
             <button
               onClick={openGenreModal}
-              className="text-sm text-blue-400 hover:text-blue-300"
+              className="text-sm text-gray-400 hover:text-white"
             >
               Edit
             </button>
@@ -114,7 +114,7 @@ export default function Filter({
             <div className="space-y-2">
               <div className="flex flex-wrap gap-1">
                 {selectedGenres.map((genre) => (
-                  <span key={genre} className="bg-blue-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+                  <span key={genre} className="bg-gray-600 text-white px-2 py-1 rounded text-xs font-medium">
                     {genre}
                   </span>
                 ))}
@@ -132,7 +132,7 @@ export default function Filter({
         {/* Media Type Filter */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-lg font-semibold">Media Type</h3>
+            <h3 className="text-lg font-semibold high-contrast-text">Media Type</h3>
           </div>
           
           <div className="flex flex-wrap gap-2">
@@ -142,9 +142,9 @@ export default function Filter({
                   type="checkbox"
                   checked={selectedMediaTypes.includes(mediaType)}
                   onChange={() => handleMediaTypeToggle(mediaType)}
-                  className="rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500"
+                  className="rounded border-gray-600 bg-gray-700 text-gray-400 focus:ring-gray-500"
                 />
-                <span className="text-sm text-gray-300">{mediaType.toUpperCase()}</span>
+                <span className="text-sm text-gray-300">{mediaType}</span>
               </label>
             ))}
           </div>
@@ -153,7 +153,7 @@ export default function Filter({
         {/* User Count Filter */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="text-lg font-semibold">User Count</h3>
+            <h3 className="text-lg font-semibold high-contrast-text">User Count</h3>
           </div>
           
           <div className="space-y-4">
@@ -205,7 +205,7 @@ export default function Filter({
         <div className="mb-6">
           <button
             onClick={handleApplyFilters}
-            className="w-full text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 py-2 rounded transition-colors"
+            className="w-full text-sm font-bold text-white bg-gray-700 hover:bg-gray-600 py-2 rounded transition-colors"
           >
             Apply Filters
           </button>
@@ -215,9 +215,9 @@ export default function Filter({
       {/* Genre Filter Modal */}
       {showGenreModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+          <div className="high-contrast-bg rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Select Genres</h2>
+              <h2 className="text-xl font-bold high-contrast-text">Select Genres</h2>
               <button
                 onClick={cancelGenreFilters}
                 className="text-gray-400 hover:text-white"
@@ -234,7 +234,7 @@ export default function Filter({
                       type="checkbox"
                       checked={tempSelectedGenres.includes(genre)}
                       onChange={() => handleGenreToggle(genre)}
-                      className="rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-600 bg-gray-700 text-gray-400 focus:ring-gray-500"
                     />
                     <span className="text-sm text-gray-300">{genre}</span>
                   </label>
@@ -255,7 +255,7 @@ export default function Filter({
                 </button>
                 <button
                   onClick={saveGenreFilters}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  className="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600"
                 >
                   Save
                 </button>

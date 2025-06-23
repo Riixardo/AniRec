@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import AnimeTimelineCard from './AnimeTimelineCard';
 
-export default function TimelinePage({ username, userAnimeDetails }) {
+export default function TimelinePage({ userAnimeDetails }) {
   const [selectedSeason, setSelectedSeason] = useState(null);
 
   // Group anime by season and year
@@ -72,7 +72,7 @@ export default function TimelinePage({ username, userAnimeDetails }) {
   return (
     <div className="flex-1 p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8 text-center">Anime Timeline for {username}</h1>
+        <h1 className="text-4xl font-bold mb-8 text-center">Anime Timeline</h1>
         
         <div className="relative">
           {/* Central Timeline Line */}
@@ -95,7 +95,7 @@ export default function TimelinePage({ username, userAnimeDetails }) {
 
                 {/* Season Label */}
                 <div className="text-center mb-4">
-                  <h2 className="text-xl font-bold text-white">
+                  <h2 className="text-xl font-bold high-contrast-text">
                     {getSeasonDisplayName(seasonData.season)} {seasonData.year}
                   </h2>
                   <p className="text-gray-400 text-sm">

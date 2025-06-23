@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
+import AnimeAtlasCard from './AnimeAtlasCard';
 
-export default function AtlasMapPage({ username, recommendations, userStats }) {
+export default function AtlasMapPage() {
   const [atlasData, setAtlasData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedPoint, setSelectedPoint] = useState(null);
+  const [selectedAnimeData, setSelectedAnimeData] = useState(null);
+  const [cardLoading, setCardLoading] = useState(false);
   
   const containerRef = useRef(null);
 
@@ -163,11 +166,38 @@ export default function AtlasMapPage({ username, recommendations, userStats }) {
       const closestPoint = quadtree.find(dataX, dataY, 10 / currentTransform.k);
       
       if (closestPoint) {
-        setSelectedPoint(prev => prev === closestPoint.anime_id ? null : closestPoint.anime_id);
+        if (selectedPoint === closestPoint.anime_id) {
+          // If clicking the same point, close the card
+          setSelectedPoint(null);
+          setSelectedAnimeData(null);
+        } else {
+          // If clicking a new point, fetch its data
+          setSelectedPoint(closestPoint.anime_id);
+          fetchAnimeDetails(closestPoint.anime_id);
+        }
       } else {
         setSelectedPoint(null);
+        setSelectedAnimeData(null);
       }
     });
+  };
+
+  const fetchAnimeDetails = async (animeId) => {
+    setCardLoading(true);
+    setSelectedAnimeData(null);
+    try {
+      const response = await fetch(`http://localhost:8000/get/anime/${animeId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch anime details');
+      }
+      const data = await response.json();
+      setSelectedAnimeData(data);
+    } catch (err) {
+      console.error(err);
+      // Optionally set an error state to show in the UI
+    } finally {
+      setCardLoading(false);
+    }
   };
 
   const drawPoints = (
@@ -221,10 +251,10 @@ export default function AtlasMapPage({ username, recommendations, userStats }) {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center">Atlas Map</h1>
         
-        <div className="bg-black p-6 rounded-lg">
+        <div className="high-contrast-bg p-6 rounded-lg">
           <div className="mb-4 text-center">
-            <h2 className="text-xl font-semibold mb-2">Interactive Anime Atlas</h2>
-            <p className="text-sky-300 text-sm mb-4">
+            <h2 className="text-xl font-semibold mb-2 high-contrast-text">Interactive Anime Atlas</h2>
+            <p className="text-gray-300 text-sm mb-4">
               This graph represents what the AI model has learned about the relationships between different anime.
               <br />
               Anime positioned closer together are considered more similar by the model.
@@ -232,11 +262,9 @@ export default function AtlasMapPage({ username, recommendations, userStats }) {
             <p className="text-gray-400 text-sm mb-4">
               Each point represents an anime. Click to highlight, scroll to zoom, drag to pan.
             </p>
-            {selectedPoint && (
-              <p className="text-blue-400 text-sm">
-                Selected Anime ID: {selectedPoint}
-              </p>
-            )}
+            <p className="text-gray-300 text-sm">
+              Selected Anime ID: {selectedPoint}
+            </p>
           </div>
 
           <div 
@@ -244,7 +272,12 @@ export default function AtlasMapPage({ username, recommendations, userStats }) {
             className="flex justify-center"
             style={{ position: 'relative', width: '800px', height: '600px', margin: '0 auto' }}
           >
-            {/* The visualization will be appended here by D3 */}
+            {cardLoading && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+                <p className="text-white">Loading details...</p>
+              </div>
+            )}
+            <AnimeAtlasCard anime={selectedAnimeData} onClose={() => setSelectedAnimeData(null)} />
           </div>
           
           <div className="mt-4 text-center text-sm text-gray-400">
