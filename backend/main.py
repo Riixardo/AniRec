@@ -1,5 +1,6 @@
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request 
+import traceback
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
@@ -79,15 +80,39 @@ class PredictRequest(BaseModel):
     username: str
 
 @app.post("/predict")
-async def predict(request: PredictRequest):
-    top_20_predictions, item_score_pairs_sorted, user_stats, user_anime_details = predict_scores(request.username, data_store["dataset"], data_store["model"], data_store["csv"])
+async def predict(request_data: PredictRequest, request: Request):
+    # First, log everything about the incoming request
+    print("\n--- NEW REQUEST TO /predict ---")
+    print(f"CLIENT IP: {request.client.host}")
+    print("HEADERS:")
+    for name, value in request.headers.items():
+        print(f"  {name}: {value}")
     
-    return {
-        "recommendations": top_20_predictions, 
-        "item_score_pairs_sorted": item_score_pairs_sorted, 
-        "user_stats": user_stats,
-        "user_anime_details": user_anime_details
-    }
+    # Now, try to process it
+    try:
+        # We already have the parsed data in `request_data`, so we use that
+        print(f"BODY (parsed): {request_data.dict()}")
+        print("---------------------------------")
+
+        top_20_predictions, item_score_pairs_sorted, user_stats, user_anime_details = predict_scores(
+            request_data.username, 
+            data_store["dataset"], 
+            data_store["model"], 
+            data_store["csv"]
+        )
+    
+        return {
+            "recommendations": top_20_predictions, 
+            "item_score_pairs_sorted": item_score_pairs_sorted, 
+            "user_stats": user_stats,
+            "user_anime_details": user_anime_details
+        }
+    except Exception as e:
+        # If anything crashes, this will catch it and show us the traceback
+        print("\n---!!! ERROR PROCESSING REQUEST !!!---")
+        traceback.print_exc()
+        print("--------------------------------------")
+        raise HTTPException(status_code=500, detail="Internal Server Error during prediction.")
 
 class FilteredPredictRequest(BaseModel):
     item_score_pairs_sorted: List[List[float]]
