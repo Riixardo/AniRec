@@ -46,14 +46,14 @@ export default function HomePage() {
     setMinUsers(0);
     setMaxUsers(4200000);
 
-    if (!finalUsername) {
+    if (!finalUsername.trim()) {
       setError('Please enter a username.');
       return;
     }
     
     setIsFiltering(true);
     try {
-      const response = await fetch('http://localhost:8000/predict', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: finalUsername }),
@@ -84,7 +84,7 @@ export default function HomePage() {
     setCurrentPage(1);
     
     try {
-      const response = await fetch('http://localhost:8000/predict/filtered', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/predict/filtered`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -119,7 +119,7 @@ export default function HomePage() {
     setCurrentPage(newPage);
     
     try {
-      const response = await fetch('http://localhost:8000/predict/filtered', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/predict/filtered`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

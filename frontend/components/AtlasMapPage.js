@@ -28,7 +28,7 @@ export default function AtlasMapPage() {
   const fetchAtlasData = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8000/atlas');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/atlas`);
       if (!response.ok) throw new Error('Failed to fetch atlas data');
       const data = await response.json();
       setAtlasData(data.atlas_data);
@@ -186,7 +186,7 @@ export default function AtlasMapPage() {
     setCardLoading(true);
     setSelectedAnimeData(null);
     try {
-      const response = await fetch(`http://localhost:8000/get/anime/${animeId}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/get/anime/${animeId}`);
       if (!response.ok) {
         throw new Error('Failed to fetch anime details');
       }
