@@ -57,7 +57,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://127.0.0.1:3000",
         "http://3.138.171.23:3000",
-        "http://anirec.ca",
+        "https://anirec.ca",
     ], 
     allow_credentials=True,
     allow_methods=["*"],
