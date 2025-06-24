@@ -5,15 +5,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
 from typing import List, Dict, Any
+from pathlib import Path 
 import uvicorn
 import pickle
 
 from predict import predict_scores, fetch_recs_from_filters
 
-CSV_FILE_PATH = './data/anime_data_with_images.csv' 
-MODEL_SAVE_PATH = './model_files/lightfm_anime_model.pkl'
-DATASET_SAVE_PATH = './model_files/lightfm_anime_dataset.pkl'   
-ATLAS_DATA_PATH = './data/atlas_data.csv'
+BACKEND_DIR = Path(__file__).resolve().parent
+
+CSV_FILE_PATH = BACKEND_DIR / "data" / "anime_data_with_images.csv"
+MODEL_SAVE_PATH = BACKEND_DIR / "model_files" / "lightfm_anime_model.pkl"
+DATASET_SAVE_PATH = BACKEND_DIR / "model_files" / "lightfm_anime_dataset.pkl"
+ATLAS_DATA_PATH = BACKEND_DIR / "data" / "atlas_data.csv"
 
 data_store = {}
 
