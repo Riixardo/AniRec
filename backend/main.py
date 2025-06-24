@@ -83,20 +83,8 @@ class PredictRequest(BaseModel):
     username: str
 
 @app.post("/predict")
-async def predict(request_data: PredictRequest, request: Request):
-    # First, log everything about the incoming request
-    print("\n--- NEW REQUEST TO /predict ---")
-    print(f"CLIENT IP: {request.client.host}")
-    print("HEADERS:")
-    for name, value in request.headers.items():
-        print(f"  {name}: {value}")
-    
-    # Now, try to process it
+async def predict(request_data: PredictRequest):
     try:
-        # We already have the parsed data in `request_data`, so we use that
-        print(f"BODY (parsed): {request_data.dict()}")
-        print("---------------------------------")
-
         top_20_predictions, item_score_pairs_sorted, user_stats, user_anime_details = predict_scores(
             request_data.username, 
             data_store["dataset"], 
