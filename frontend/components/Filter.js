@@ -93,7 +93,7 @@ export default function Filter({
   return (
     <>
       {/* Sidebar */}
-      <div className="w-80 high-contrast-bg p-6 min-h-screen overflow-y-auto">
+      <div className="w-full lg:w-80 high-contrast-bg p-4 sm:p-6 lg:min-h-0 lg:overflow-y-auto">
         <h2 className="text-xl font-bold mb-4 high-contrast-text">Filters</h2>
         
         {/* Genres Filter */}

@@ -23,7 +23,7 @@ export default function RecommendationsPage({
   totalPages
 }) {
   return (
-    <div className="flex">
+    <div className="flex flex-col lg:flex-row">
       {/* Filter Component */}
       <Filter
         selectedGenres={selectedGenres}
@@ -38,8 +38,8 @@ export default function RecommendationsPage({
       />
 
       {/* Main Content */}
-      <div className="flex-1 p-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8">
+        <div className="w-full">
           {/* Error Message */}
           {error && (
             <div className="text-center mb-6">

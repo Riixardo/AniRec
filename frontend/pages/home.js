@@ -214,20 +214,20 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="w-full min-h-screen bg-black text-white overflow-x-auto">
       {/* Header */}
-      <div className="high-contrast-bg border-b border-gray-700">
-      <div className="max-w-6xl mx-auto px-8 py-6 flex justify-center items-center">
-        <button onClick={() => {router.push('/')}} className="text-4xl font-bold text-center glow-text focus:outline-none hover:text-black">
-          AniRec
-        </button>
-      </div>
+      <div className="w-full high-contrast-bg border-b border-gray-700">
+        <div className="h-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
+          <button onClick={() => {router.push('/')}} className="text-4xl font-bold text-center glow-text focus:outline-none hover:text-black">
+            AniRec
+          </button>
+        </div>
       </div>
 
       {/* Navigation Tabs with Username Input */}
       <div className="high-contrast-bg border-b border-gray-700">
-        <div className="max-w-6xl mx-auto px-8">
-          <div className="flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center flex-col sm:flex-row justify-between">
             {/* Tabs */}
             <div className="flex space-x-8">
               {tabs.map((tab) => (
@@ -244,9 +244,7 @@ export default function HomePage() {
                 </button>
               ))}
             </div>
-
-            {/* Username Input */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mb-2 mt-2 sm:mt-0 sm:mb-0">
               <input
                 type="text"
                 value={username}

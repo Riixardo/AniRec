@@ -269,8 +269,7 @@ export default function AtlasMapPage() {
 
           <div 
             ref={containerRef} 
-            className="flex justify-center"
-            style={{ position: 'relative', width: '800px', height: '600px', margin: '0 auto' }}
+            className="flex justify-center relative w-[80%] h-[80%] mx-auto"
           >
             {cardLoading && (
               <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">

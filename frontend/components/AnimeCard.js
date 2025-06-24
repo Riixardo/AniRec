@@ -32,7 +32,7 @@ const AnimeCard = ({ anime }) => {
 
   return (
     <div className="high-contrast-bg rounded-sm overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <div className="flex">
+      <div className="flex h-48 lg:h-auto overflow-y-auto">
         {/* Image Section */}
         <div className="w-1/5">
           {image_url ? (

@@ -24,7 +24,7 @@ export default function Index() {
       <div className="flex flex-col items-center justify-center text-center w-full">
         <h1 className="text-6xl font-bold mb-4">AniRec</h1>
         <p className="text-lg text-gray-400 mb-8">Get personalized anime recommendations.</p>
-        <div className="flex w-full max-w-md focus-within:ring-2 focus-within:ring-white rounded-sm transition">
+        <div className="flex w-2/3 sm:max-w-md focus-within:ring-2 focus-within:ring-white rounded-sm transition">
           <input
             type="text"
             value={username}
