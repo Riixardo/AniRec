@@ -9,6 +9,7 @@ export default function RecommendationsPage({
   totalFilteredCount,
   currentPage,
   isFiltering,
+  isLoading,
   error,
   selectedGenres,
   setSelectedGenres,
@@ -47,8 +48,16 @@ export default function RecommendationsPage({
             </div>
           )}
 
+          {/* Loading State */}
+          {isLoading && (
+            <div className="text-center py-12">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-4"></div>
+              <p className="text-xl high-contrast-text">Loading recommendations...</p>
+            </div>
+          )}
+
           {/* Recommendations */}
-          {recommendations && (
+          {recommendations && !isLoading && (
             <div className="relative">
               {isFiltering && (
                 <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
@@ -91,6 +100,18 @@ export default function RecommendationsPage({
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {/* No Recommendations State */}
+          {!recommendations && !isLoading && !error && (
+            <div className="text-center py-12">
+              <h2 className="text-2xl font-semibold high-contrast-text mb-4">
+                Get Started
+              </h2>
+              <p className="text-gray-400">
+                Enter a MyAnimeList username above to get personalized recommendations.
+              </p>
             </div>
           )}
         </div>

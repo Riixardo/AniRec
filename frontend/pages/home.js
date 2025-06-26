@@ -12,6 +12,7 @@ export default function HomePage() {
   const [totalFilteredCount, setTotalFilteredCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFiltering, setIsFiltering] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [selectedMediaTypes, setSelectedMediaTypes] = useState([]);
@@ -51,7 +52,7 @@ export default function HomePage() {
       return;
     }
     
-    setIsFiltering(true);
+    setIsLoading(true);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/predict`, {
         method: 'POST',
@@ -73,7 +74,7 @@ export default function HomePage() {
     } catch (err) {
       setError(err.message);
     } finally {
-      setIsFiltering(false);
+      setIsLoading(false);
     }
   };
 
@@ -170,6 +171,7 @@ export default function HomePage() {
           totalFilteredCount={totalFilteredCount}
           currentPage={currentPage}
           isFiltering={isFiltering}
+          isLoading={isLoading}
           error={error}
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
@@ -197,6 +199,7 @@ export default function HomePage() {
           totalFilteredCount={totalFilteredCount}
           currentPage={currentPage}
           isFiltering={isFiltering}
+          isLoading={isLoading}
           error={error}
           selectedGenres={selectedGenres}
           setSelectedGenres={setSelectedGenres}
