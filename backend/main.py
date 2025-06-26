@@ -91,6 +91,21 @@ async def predict(request_data: PredictRequest):
             data_store["model"], 
             data_store["csv"]
         )
+
+        # Check if we got any user data back
+        if len(user_anime_details) == 0:
+            # This means the username was invalid or not found
+            raise HTTPException(
+                status_code=404, 
+                detail=f"Username '{request_data.username}' not found on MyAnimeList. Please check the username and try again."
+            )
+
+        # Check if we have any recommendations
+        if len(top_20_predictions) == 0:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"Unable to generate recommendations for user '{request_data.username}'"
+            )
     
         return {
             "recommendations": top_20_predictions, 
@@ -98,6 +113,9 @@ async def predict(request_data: PredictRequest):
             "user_stats": user_stats,
             "user_anime_details": user_anime_details
         }
+    except HTTPException:
+        # Re-raise HTTP exceptions as-is
+        raise
     except Exception as e:
         # If anything crashes, this will catch it and show us the traceback
         print("\n---!!! ERROR PROCESSING REQUEST !!!---")

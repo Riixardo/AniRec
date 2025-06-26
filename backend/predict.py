@@ -132,7 +132,10 @@ def predict_scores(username, dataset, model, df):
         else:
             print(f"Error {response.status_code}: {response.text}")
             if response.status_code == 403 or response.status_code == 404:
-                break
+                return [], [], {}, []
+            else:
+                # For other API errors, we should still return empty but with a flag
+                return [], [], {}, []
 
     new_user_genre_preferences = {}
     genre_counts = {}
