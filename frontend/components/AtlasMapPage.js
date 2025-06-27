@@ -251,38 +251,62 @@ export default function AtlasMapPage() {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center">Atlas Map</h1>
         
-        <div className="high-contrast-bg p-6 rounded-lg">
-          <div className="mb-4 text-center">
-            <h2 className="text-xl font-semibold mb-2 high-contrast-text">Interactive Anime Atlas</h2>
-            <p className="text-gray-300 text-sm mb-4">
-              This graph represents what the AI model has learned about the relationships between different anime.
-              <br />
-              Anime positioned closer together are considered more similar by the model.
-            </p>
-            <p className="text-gray-400 text-sm mb-4">
-              Each point represents an anime. Click to highlight, scroll to zoom, drag to pan.
-            </p>
-            <p className="text-gray-300 text-sm">
-              Selected Anime ID: {selectedPoint}
-            </p>
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-4"></div>
+            <p className="text-xl high-contrast-text">Loading atlas data...</p>
           </div>
+        )}
 
-          <div 
-            ref={containerRef} 
-            className="flex justify-center relative w-[80%] h-[80%] mx-auto"
-          >
-            {cardLoading && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-                <p className="text-white">Loading details...</p>
-              </div>
-            )}
-            <AnimeAtlasCard anime={selectedAnimeData} onClose={() => setSelectedAnimeData(null)} />
+        {/* Error State */}
+        {error && !loading && (
+          <div className="text-center py-12">
+            <p className="text-red-400 bg-red-900/20 p-3 rounded-md mb-4">{error}</p>
+            <button 
+              onClick={fetchAtlasData}
+              className="px-4 py-2 high-contrast-bg rounded hover:bg-gray-700 transition-colors"
+            >
+              Retry
+            </button>
           </div>
-          
-          <div className="mt-4 text-center text-sm text-gray-400">
-            <p>Total anime points: {atlasData?.length || 0}</p>
+        )}
+
+        {/* Atlas Content */}
+        {!loading && !error && atlasData && (
+          <div className="high-contrast-bg p-6 rounded-lg">
+            <div className="mb-4 text-center">
+              <h2 className="text-xl font-semibold mb-2 high-contrast-text">Interactive Anime Atlas</h2>
+              <p className="text-gray-300 text-sm mb-4">
+                This graph represents what the AI model has learned about the relationships between different anime.
+                <br />
+                Anime positioned closer together are considered more similar by the model.
+              </p>
+              <p className="text-gray-400 text-sm mb-4">
+                Each point represents an anime. Click to highlight, scroll to zoom, drag to pan.
+              </p>
+              <p className="text-gray-300 text-sm">
+                Selected Anime ID: {selectedPoint}
+              </p>
+            </div>
+
+            <div 
+              ref={containerRef} 
+              className="flex justify-center relative w-[80%] h-[80%] mx-auto"
+            >
+              {cardLoading && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+                  <p className="text-white">Loading details...</p>
+                </div>
+              )}
+              <AnimeAtlasCard anime={selectedAnimeData} onClose={() => setSelectedAnimeData(null)} />
+            </div>
+            
+            <div className="mt-4 text-center text-sm text-gray-400">
+              <p>Total anime points: {atlasData?.length || 0}</p>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

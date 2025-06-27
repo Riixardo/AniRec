@@ -83,6 +83,7 @@ export default function HomePage() {
 
     setIsFiltering(true);
     setCurrentPage(1);
+    setIsLoading(true);
     
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/predict/filtered`, {
@@ -110,6 +111,7 @@ export default function HomePage() {
       setError(err.message);
     } finally {
       setIsFiltering(false);
+      setIsLoading(false);
     }
   };
 
