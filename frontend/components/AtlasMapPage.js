@@ -9,8 +9,12 @@ export default function AtlasMapPage() {
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [selectedAnimeData, setSelectedAnimeData] = useState(null);
   const [cardLoading, setCardLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   
   const containerRef = useRef(null);
+  const selectedPointRef = useRef(null);
 
   const vizRef = useRef({
     xScale: null,
@@ -55,6 +59,34 @@ export default function AtlasMapPage() {
     }
   }, [selectedPoint]);
 
+  // Handle clicking outside search results
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showSearchResults && !event.target.closest('.search-container')) {
+        setShowSearchResults(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSearchResults]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setShowSearchResults(false);
+        setSearchQuery('');
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const createAtlasVisualization = () => {
     const container = d3.select(containerRef.current);
@@ -132,6 +164,7 @@ export default function AtlasMapPage() {
         gY.call(yAxis.scale(newYScale));
         
         drawPoints(newXScale, newYScale);
+
     };
 
     draw(vizRef.current.currentTransform);
@@ -163,19 +196,23 @@ export default function AtlasMapPage() {
       const dataX = newXScale.invert(mx);
       const dataY = newYScale.invert(my);
       
-      const closestPoint = quadtree.find(dataX, dataY, 10 / currentTransform.k);
+      const closestPoint = quadtree.find(dataX, dataY, 2 / currentTransform.k);
       
       if (closestPoint) {
-        if (selectedPoint === closestPoint.anime_id) {
+        // Use ref to check current selected point
+        if (selectedPointRef.current === closestPoint.anime_id) {
           // If clicking the same point, close the card
+          selectedPointRef.current = null;
           setSelectedPoint(null);
           setSelectedAnimeData(null);
         } else {
           // If clicking a new point, fetch its data
+          selectedPointRef.current = closestPoint.anime_id;
           setSelectedPoint(closestPoint.anime_id);
           fetchAnimeDetails(closestPoint.anime_id);
         }
       } else {
+        selectedPointRef.current = null;
         setSelectedPoint(null);
         setSelectedAnimeData(null);
       }
@@ -214,36 +251,95 @@ export default function AtlasMapPage() {
     context.save();
 
     const { radiusScale, colorScale } = vizRef.current;
+    const currentSelectedPoint = selectedPointRef.current; // Use ref instead of state
 
+    // Store selected point data for drawing later
+    let selectedPointData = null;
+
+    // Draw all normal points first
     atlasData.forEach(d => {
       const cx = newXScale(d.x_coord);
       const cy = newYScale(d.y_coord);
 
       if (cx >= 0 && cx <= width && cy >= 0 && cy <= height) {
         const radius = radiusScale(d.num_list_users);
-        context.beginPath();
-        context.arc(cx, cy, radius, 0, 2 * Math.PI);
-        context.fillStyle = (d.anime_id === selectedPoint) ? '#ff6b6b' : colorScale(d.num_list_users);
-        context.fill();
+        
+        // Check if this is the selected point
+        if (d.anime_id === currentSelectedPoint) {
+          // Store data for drawing later
+          selectedPointData = { d, cx, cy, radius };
+        } else {
+          // Draw normal point
+          context.beginPath();
+          context.arc(cx, cy, radius, 0, 2 * Math.PI);
+          context.fillStyle = colorScale(d.num_list_users);
+          context.fill();
+        }
       }
     });
 
-    if (selectedPoint) {
-      const selectedData = atlasData.find(d => d.anime_id === selectedPoint);
-      if (selectedData) {
-        const cx = newXScale(selectedData.x_coord);
-        const cy = newYScale(selectedData.y_coord);
-        const radius = radiusScale(selectedData.num_list_users);
-        context.beginPath();
-        context.arc(cx, cy, radius * 1.5, 0, 2 * Math.PI);
-        context.fillStyle = '#ff6b6b';
-        context.strokeStyle = 'white';
-        context.lineWidth = 1.5;
-        context.fill();
-        context.stroke();
-      }
+    // Draw the selected point last so it appears on top
+    if (selectedPointData) {
+      const { d, cx, cy, radius } = selectedPointData;
+      
+      // Draw selected point with light pink highlight
+      context.beginPath();
+      context.arc(cx, cy, radius, 0, 2 * Math.PI);
+      context.fillStyle = '#ffb3d9'; // Light pink
+      context.fill();
+      
+      // Add white border for selected point
+      context.strokeStyle = 'white';
+      context.lineWidth = 1.5;
+      context.stroke();
+      
+      // Draw larger circle for selected point
+      context.beginPath();
+      context.arc(cx, cy, radius * 1.5, 0, 2 * Math.PI);
+      context.strokeStyle = '#ffb3d9'; // Light pink
+      context.lineWidth = 2;
+      context.stroke();
     }
+
     context.restore();
+  };
+
+  // Search functionality
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    
+    if (!query.trim() || !atlasData) {
+      setSearchResults([]);
+      setShowSearchResults(false);
+      return;
+    }
+
+    const results = atlasData
+      .filter(anime => 
+        anime.title && 
+        anime.title.toLowerCase().includes(query.toLowerCase())
+      )
+      .slice(0, 10); // Limit to 10 results
+    
+    setSearchResults(results);
+    setShowSearchResults(results.length > 0);
+  };
+
+  const selectAnimeFromSearch = (anime) => {
+    selectedPointRef.current = anime.anime_id;
+    setSelectedPoint(anime.anime_id);
+    setSearchQuery(anime.title);
+    setShowSearchResults(false);
+    fetchAnimeDetails(anime.anime_id);
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setSearchResults([]);
+    setShowSearchResults(false);
+    selectedPointRef.current = null;
+    setSelectedPoint(null);
+    setSelectedAnimeData(null);
   };
 
   return (
@@ -285,6 +381,47 @@ export default function AtlasMapPage() {
               <p className="text-gray-400 text-sm mb-4">
                 Each point represents an anime. Click to highlight, scroll to zoom, drag to pan.
               </p>
+              
+              {/* Search Bar */}
+              <div className="relative max-w-md mx-auto mb-4 search-container">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  placeholder="Search for anime by title..."
+                  className="w-full p-3 rounded-md high-contrast-bg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-white focus:glow-border text-white text-sm"
+                  onFocus={() => {
+                    if (searchResults.length > 0) {
+                      setShowSearchResults(true);
+                    }
+                  }}
+                />
+                {searchQuery && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+                  >
+                    ✕
+                  </button>
+                )}
+                
+                {/* Search Results Dropdown */}
+                {showSearchResults && searchResults.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-gray-800 border border-gray-600 rounded-md shadow-lg z-30 max-h-60 overflow-y-auto">
+                    {searchResults.map((anime) => (
+                      <button
+                        key={anime.anime_id}
+                        onClick={() => selectAnimeFromSearch(anime)}
+                        className="w-full text-left p-3 hover:bg-gray-700 transition-colors border-b border-gray-600 last:border-b-0"
+                      >
+                        <div className="text-white text-sm font-medium">{anime.title}</div>
+                        <div className="text-gray-400 text-xs">ID: {anime.anime_id}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
               <p className="text-gray-300 text-sm">
                 Selected Anime ID: {selectedPoint}
               </p>

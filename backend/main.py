@@ -160,11 +160,11 @@ async def get_atlas_data():
         anime_df['anime_id'] = anime_df['anime_id'].astype(int)
 
         # Select only necessary columns and merge
-        anime_info_df = anime_df[['anime_id', 'num_list_users']]
+        anime_info_df = anime_df[['anime_id', 'num_list_users', 'title']]
         merged_df = pd.merge(atlas_df, anime_info_df, on='anime_id')
         
         # Check if required columns exist
-        required_columns = ['anime_id', 'x_coord', 'y_coord', 'num_list_users']
+        required_columns = ['anime_id', 'x_coord', 'y_coord', 'num_list_users', 'title']
         if not all(col in merged_df.columns for col in required_columns):
             raise HTTPException(status_code=500, detail="Atlas data is missing required columns.")
 
