@@ -315,7 +315,13 @@ def predict_scores(username, dataset, model, df):
         min_s = np.min(scores)
         max_s = np.max(scores)
         
-        normalized_model_scores = [(s - min_s) / (max_s - min_s) for s in scores]
+        # Check if all scores are the same to avoid division by zero
+        if max_s == min_s:
+            # If all scores are the same, set normalized scores to 0.5
+            normalized_model_scores = [0.5 for s in scores]
+        else:
+            normalized_model_scores = [(s - min_s) / (max_s - min_s) for s in scores]
+        
         item_scores_pairs = list(zip(all_item_internal_ids, normalized_model_scores))
 
         seen_and_bad_item_internal_ids = set()

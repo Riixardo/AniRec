@@ -24,7 +24,7 @@ data_store = {}
 async def lifespan(app: FastAPI):
     # Load data on startup
     print(f"Loading anime data from {CSV_FILE_PATH}...")
-    df = pd.read_csv(CSV_FILE_PATH)
+    df = pd.read_csv(CSV_FILE_PATH, na_values=[], keep_default_na=False)
     data_store["csv"] = df
     print("Anime data loaded.")
 
@@ -39,7 +39,7 @@ async def lifespan(app: FastAPI):
     print("Dataset object loaded.")
 
     print(f"Loading atlas data from {ATLAS_DATA_PATH}...")
-    df_atlas = pd.read_csv(ATLAS_DATA_PATH)
+    df_atlas = pd.read_csv(ATLAS_DATA_PATH, na_values=[], keep_default_na=False)
     data_store["atlas"] = df_atlas
     print("Atlas data loaded.")
 
