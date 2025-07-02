@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Head from 'next/head';
 import RecommendationsPage from '../components/RecommendationsPage';
 import StatisticsPage from '../components/StatisticsPage';
 import TimelinePage from '../components/TimelinePage';
@@ -32,6 +33,28 @@ export default function HomePage() {
     { id: 'timeline', name: 'Timeline' },
     { id: 'atlas', name: 'Atlas Map' }
   ];
+
+  // Generate SEO-friendly title and description based on active tab
+  const getPageTitle = () => {
+    const tabNames = {
+      'recommendations': 'Anime Recommendations',
+      'statistics': 'Anime Statistics & Insights',
+      'timeline': 'Anime Watching Timeline',
+      'atlas': 'Anime Atlas Map'
+    };
+    const tabName = tabNames[activeTab] || 'Anime Recommendations';
+    return `${tabName} | AniRec - Personalized Anime Discovery`;
+  };
+
+  const getPageDescription = () => {
+    const tabDescriptions = {
+      'recommendations': 'Get personalized anime recommendations based on your MyAnimeList profile. Filter by genre, media type, and popularity to discover your next favorite anime series and movies.',
+      'statistics': 'Explore detailed anime watching statistics and insights. Analyze your genre preferences, watching patterns, and anime history with comprehensive data visualization.',
+      'timeline': 'View your anime watching timeline and history. Track when you started and completed different anime series with an interactive chronological view.',
+      'atlas': 'Explore your anime journey on an interactive map. Visualize your anime watching patterns and preferences with our innovative atlas visualization tool.'
+    };
+    return tabDescriptions[activeTab] || 'Get personalized anime recommendations based on your MyAnimeList profile. Filter by genre, media type, and popularity to discover your next favorite anime series and movies.';
+  };
 
   const handleGetRecommendations = async (userToFetch) => {
     const finalUsername = userToFetch || username;
@@ -219,7 +242,19 @@ export default function HomePage() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-black text-white overflow-x-auto">
+    <>
+      <Head>
+        <title>{getPageTitle()}</title>
+        <meta name="description" content={getPageDescription()} />
+        <meta name="keywords" content="anime recommendations, MyAnimeList, AI anime suggestions, machine learning, personalized anime, anime statistics, anime timeline, anime atlas" />
+        <meta property="og:title" content={getPageTitle()} />
+        <meta property="og:description" content={getPageDescription()} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://anirec.com/home" />
+        <meta name="twitter:title" content={getPageTitle()} />
+        <meta name="twitter:description" content={getPageDescription()} />
+      </Head>
+      <div className="w-full min-h-screen bg-black text-white overflow-x-auto">
       {/* Header */}
       <div className="w-full high-contrast-bg border-b border-gray-700">
         <div className="h-24 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center items-center">
@@ -271,5 +306,6 @@ export default function HomePage() {
       {/* Page Content */}
       {renderActiveTab()}
     </div>
+    </>
   );
 } 
