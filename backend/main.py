@@ -9,7 +9,7 @@ from pathlib import Path
 import uvicorn
 import pickle
 
-from predict import predict_scores, fetch_recs_from_filters
+from predict import predict_scores, fetch_recs_from_filters, get_user_anime_status
 
 BACKEND_DIR = Path(__file__).resolve().parent
 
@@ -149,7 +149,7 @@ async def predict_filtered(request: FilteredPredictRequest):
     return {"recommendations": paginated_recs, "total_count": total_filtered_count}
 
 @app.get("/atlas")
-async def get_atlas_data():
+async def get_atlas_data(username: str | None = None):
     try:
         # Load the pre-generated atlas data and anime data
         atlas_df = data_store["atlas"]
@@ -168,8 +168,22 @@ async def get_atlas_data():
         if not all(col in merged_df.columns for col in required_columns):
             raise HTTPException(status_code=500, detail="Atlas data is missing required columns.")
 
-        # Convert to list of dictionaries
-        atlas_data = merged_df.to_dict(orient='records')
+        # Get user's anime status if username is provided
+        user_anime_status = {}
+        if username:
+            try:
+                user_anime_status = get_user_anime_status(username)
+            except Exception as e:
+                print(f"Error fetching user's anime status for {username}: {e}")
+                # Continue without user data if there's an error
+
+        # Add user status to each anime
+        atlas_data = []
+        for _, row in merged_df.iterrows():
+            anime_record = row.to_dict()
+            anime_id = anime_record['anime_id']
+            anime_record['user_status'] = user_anime_status.get(anime_id, None)
+            atlas_data.append(anime_record)
         
         return {"atlas_data": atlas_data}
     except FileNotFoundError as fnf_error:

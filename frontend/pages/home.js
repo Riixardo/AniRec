@@ -43,17 +43,17 @@ export default function HomePage() {
       'atlas': 'Anime Atlas Map'
     };
     const tabName = tabNames[activeTab] || 'Anime Recommendations';
-    return `${tabName} | AniRec - Personalized Anime Discovery`;
+    return `AniRec - Get Personalized Anime Recommendations | ${tabName}`;
   };
 
   const getPageDescription = () => {
     const tabDescriptions = {
-      'recommendations': 'Get personalized anime recommendations based on your MyAnimeList profile. Filter by genre, media type, and popularity to discover your next favorite anime series and movies.',
+      'recommendations': 'Get personalized anime recommendations based on your MyAnimeList profile with the help of AI and machine learning. Filter by genre, media type, and popularity to discover your next favorite anime series and movies.',
       'statistics': 'Explore detailed anime watching statistics and insights. Analyze your genre preferences, watching patterns, and anime history with comprehensive data visualization.',
       'timeline': 'View your anime watching timeline and history. Track when you started and completed different anime series with an interactive chronological view.',
-      'atlas': 'Explore your anime journey on an interactive map. Visualize your anime watching patterns and preferences with our innovative atlas visualization tool.'
+      'atlas': 'Explore your anime journey on an interactive map. Visualize your anime watching patterns and preferences with our innovative atlas visualization tool, build using our AI model.'
     };
-    return tabDescriptions[activeTab] || 'Get personalized anime recommendations based on your MyAnimeList profile. Filter by genre, media type, and popularity to discover your next favorite anime series and movies.';
+    return tabDescriptions[activeTab] || 'Get personalized anime recommendations based on your MyAnimeList profile with the help of AI and machine learning. Filter by genre, media type, and popularity to discover your next favorite anime series and movies.';
   };
 
   const handleGetRecommendations = async (userToFetch) => {
@@ -215,7 +215,7 @@ export default function HomePage() {
       case 'timeline':
         return <TimelinePage userAnimeDetails={userAnimeDetails} />;
       case 'atlas':
-        return <AtlasMapPage/>;
+        return <AtlasMapPage username={username} />;
       default:
         return <RecommendationsPage 
           username={username} 

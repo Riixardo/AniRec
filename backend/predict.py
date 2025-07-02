@@ -13,6 +13,45 @@ BAD_ANIME_IDS = [51563, 52401, 52257, 51210]
 
 load_dotenv()  
 
+def get_user_anime_status(username):
+    """
+    Fetch user's anime list and return a dictionary mapping anime_id to status.
+    Returns {anime_id: status} for all anime in user's list.
+    """
+    CLIENT_ID = os.getenv("MAL_CLIENT_ID")
+    headers = {
+        "X-MAL-CLIENT-ID": CLIENT_ID
+    }
+
+    url = f"https://api.myanimelist.net/v2/users/{username}/animelist?nsfw=true&limit=1000&fields=list_status"
+    anime_status = {}
+
+    # Fetch user's anime list
+    while url and url != "":
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            list_objects = data.get("data", [])
+            print(f"Fetched {len(list_objects)} anime entries for user '{username}' from {url}")
+            
+            for entry in list_objects:
+                anime = entry["node"]
+                list_status = entry["list_status"]
+                status = list_status["status"]
+                
+                # Include all anime with their status
+                anime_status[anime["id"]] = status
+            
+            url = data["paging"].get("next", "")
+        else:
+            print(f"Error {response.status_code}: {response.text}")
+            if response.status_code == 403 or response.status_code == 404:
+                return {}
+            else:
+                return {}
+
+    return anime_status
+
 def fetch_recs_from_filters(item_score_pairs_sorted, df, dataset, filters, page, page_size):
     # Get mapping from internal model ID to original anime ID
     _, _, item_id_map, _ = dataset.mapping()
@@ -263,7 +302,7 @@ def predict_scores(username, dataset, model, df):
         status = entry["status"]
         row_weight = 1.0
         score = float(entry['score'])
-        if status == 'Completed' or status == 'Watching':
+        if status == 'completed' or status == 'watching':
             if score == 0:
                 row_weight = 0.5
             elif score >= 8:
@@ -276,11 +315,11 @@ def predict_scores(username, dataset, model, df):
                 row_weight = 0.2
             else:
                 row_weight = 0.1
-        elif status == 'Plan to Watch':
+        elif status == 'plan_to_watch':
             row_weight = 0.7
-        elif status == 'Dropped':
+        elif status == 'dropped':
             row_weight = 0.0
-        elif status == 'On-Hold':
+        elif status == 'on_hold':
             row_weight = 0.2
         new_user_interactions_rows.append(0)           
         new_user_interactions_cols.append(item_int_id)

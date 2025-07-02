@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import AnimeAtlasCard from './AnimeAtlasCard';
 
-export default function AtlasMapPage() {
+export default function AtlasMapPage({ username }) {
   const [atlasData, setAtlasData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -32,7 +32,10 @@ export default function AtlasMapPage() {
   const fetchAtlasData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/atlas`);
+      const url = username 
+        ? `${process.env.NEXT_PUBLIC_API_URL}/atlas?username=${encodeURIComponent(username)}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/atlas`;
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch atlas data');
       const data = await response.json();
       setAtlasData(data.atlas_data);
@@ -253,8 +256,8 @@ export default function AtlasMapPage() {
     const { radiusScale, colorScale } = vizRef.current;
     const currentSelectedPoint = selectedPointRef.current; // Use ref instead of state
 
-    // Store selected point data for drawing later
-    let selectedPointData = null;
+    // Store selected point data and user's anime data for drawing later
+    let selectedPointsData = [];
 
     // Draw all normal points first
     atlasData.forEach(d => {
@@ -264,10 +267,10 @@ export default function AtlasMapPage() {
       if (cx >= 0 && cx <= width && cy >= 0 && cy <= height) {
         const radius = radiusScale(d.num_list_users);
         
-        // Check if this is the selected point
-        if (d.anime_id === currentSelectedPoint) {
+        // Check if this is the selected point or user's anime
+        if (d.anime_id === currentSelectedPoint || d.user_status) {
           // Store data for drawing later
-          selectedPointData = { d, cx, cy, radius };
+          selectedPointsData.push({ d, cx, cy, radius });
         } else {
           // Draw normal point
           context.beginPath();
@@ -278,28 +281,72 @@ export default function AtlasMapPage() {
       }
     });
 
-    // Draw the selected point last so it appears on top
-    if (selectedPointData) {
-      const { d, cx, cy, radius } = selectedPointData;
+    // Draw all user's anime and selected points last so they appear on top
+    selectedPointsData.forEach(({ d, cx, cy, radius }) => {
+      const isSelected = d.anime_id === currentSelectedPoint;
       
-      // Draw selected point with light pink highlight
-      context.beginPath();
-      context.arc(cx, cy, radius, 0, 2 * Math.PI);
-      context.fillStyle = '#ffb3d9'; // Light pink
-      context.fill();
-      
-      // Add white border for selected point
-      context.strokeStyle = 'white';
-      context.lineWidth = 1.5;
-      context.stroke();
-      
-      // Draw larger circle for selected point
-      context.beginPath();
-      context.arc(cx, cy, radius * 1.5, 0, 2 * Math.PI);
-      context.strokeStyle = '#ffb3d9'; // Light pink
-      context.lineWidth = 2;
-      context.stroke();
-    }
+      if (isSelected) {
+        // Draw selected point with light pink highlight
+        context.beginPath();
+        context.arc(cx, cy, radius, 0, 2 * Math.PI);
+        context.fillStyle = '#ffb3d9'; // Light pink
+        context.fill();
+        
+        // Add white border for selected point
+        context.strokeStyle = 'white';
+        context.lineWidth = 1.5;
+        context.stroke();
+        
+        // Draw larger circle for selected point
+        context.beginPath();
+        context.arc(cx, cy, radius * 1.5, 0, 2 * Math.PI);
+        context.strokeStyle = '#ffb3d9'; // Light pink
+        context.lineWidth = 2;
+        context.stroke();
+      } else {
+        // Draw user's anime with colored border
+        context.beginPath();
+        context.arc(cx, cy, radius, 0, 2 * Math.PI);
+        context.fillStyle = colorScale(d.num_list_users);
+        context.fill();
+        
+        // Add colored border based on user status with enhanced visibility
+        let borderColor = 'white';
+        switch (d.user_status) {
+          case 'completed':
+            borderColor = '#059669'; // darker green for better contrast
+            break;
+          case 'watching':
+            borderColor = '#1D4ED8'; // darker blue for better contrast
+            break;
+          case 'on_hold':
+            borderColor = '#D97706'; // darker yellow/orange for better contrast
+            break;
+          case 'plan_to_watch':
+            borderColor = '#DC2626'; // darker red for better contrast
+            break;
+          case 'dropped':
+            borderColor = '#374151'; // darker gray for better contrast
+            break;
+          default:
+            borderColor = 'white';
+        }
+        
+        // Draw outer glow effect for better visibility
+        context.shadowColor = borderColor;
+        context.shadowBlur = 4;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
+        
+        // Draw the border
+        context.strokeStyle = borderColor;
+        context.lineWidth = 1.5;
+        context.stroke();
+        
+        // Reset shadow for next operations
+        context.shadowBlur = 0;
+      }
+    });
 
     context.restore();
   };
@@ -380,6 +427,33 @@ export default function AtlasMapPage() {
               </p>
               <p className="text-gray-400 text-sm mb-4">
                 Each point represents an anime. Click to highlight, scroll to zoom, drag to pan.
+                {username && (
+                  <div className="block mt-2 text-xs">
+                    <div className="font-semibold mb-1">Your anime status:</div>
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      <span className="flex items-center">
+                        <span className="inline-block w-3 h-3 border-2 border-green-700 rounded-full mr-1"></span>
+                        Completed
+                      </span>
+                      <span className="flex items-center">
+                        <span className="inline-block w-3 h-3 border-2 border-blue-700 rounded-full mr-1"></span>
+                        Watching
+                      </span>
+                      <span className="flex items-center">
+                        <span className="inline-block w-3 h-3 border-2 border-yellow-600 rounded-full mr-1"></span>
+                        On Hold
+                      </span>
+                      <span className="flex items-center">
+                        <span className="inline-block w-3 h-3 border-2 border-red-700 rounded-full mr-1"></span>
+                        Plan to Watch
+                      </span>
+                      <span className="flex items-center">
+                        <span className="inline-block w-3 h-3 border-2 border-gray-600 rounded-full mr-1"></span>
+                        Dropped
+                      </span>
+                    </div>
+                  </div>
+                )}
               </p>
               
               {/* Search Bar */}

@@ -23,7 +23,7 @@ export default function Index() {
   return (
     <>
       <Head>
-        <title>AniRec - Get Personalized Anime Recommendations | MyAnimeList AI</title>
+        <title>AniRec - Get Personalized Anime Recommendations | Welcome</title>
         <meta name="description" content="Enter your MyAnimeList username to get personalized anime recommendations powered by AI. Discover new anime series and movies tailored to your unique taste and preferences." />
         <meta name="keywords" content="anime recommendations, MyAnimeList, AI anime suggestions, personalized anime, anime discovery" />
         <meta property="og:title" content="AniRec - Get Personalized Anime Recommendations | MyAnimeList AI" />
