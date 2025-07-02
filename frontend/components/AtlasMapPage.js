@@ -310,41 +310,39 @@ export default function AtlasMapPage({ username }) {
         context.fillStyle = colorScale(d.num_list_users);
         context.fill();
         
-        // Add colored border based on user status with enhanced visibility
+        // Add colored border based on user status with distinct shape
         let borderColor = 'white';
         switch (d.user_status) {
           case 'completed':
-            borderColor = '#059669'; // darker green for better contrast
+            borderColor = '#22C55E'; // lighter green
             break;
           case 'watching':
-            borderColor = '#1D4ED8'; // darker blue for better contrast
+            borderColor = '#3B82F6'; // lighter blue
             break;
           case 'on_hold':
-            borderColor = '#D97706'; // darker yellow/orange for better contrast
+            borderColor = '#F59E0B'; // lighter yellow/orange
             break;
           case 'plan_to_watch':
-            borderColor = '#DC2626'; // darker red for better contrast
+            borderColor = '#EF4444'; // lighter red
             break;
           case 'dropped':
-            borderColor = '#374151'; // darker gray for better contrast
+            borderColor = '#6B7280'; // lighter gray
             break;
           default:
             borderColor = 'white';
         }
         
-        // Draw outer glow effect for better visibility
-        context.shadowColor = borderColor;
-        context.shadowBlur = 4;
-        context.shadowOffsetX = 0;
-        context.shadowOffsetY = 0;
-        
-        // Draw the border
+        // Draw inner border
         context.strokeStyle = borderColor;
         context.lineWidth = 1.5;
         context.stroke();
         
-        // Reset shadow for next operations
-        context.shadowBlur = 0;
+        // Draw larger outer circle for distinct shape (like selected point)
+        context.beginPath();
+        context.arc(cx, cy, radius * 1.3, 0, 2 * Math.PI);
+        context.strokeStyle = borderColor;
+        context.lineWidth = 1;
+        context.stroke();
       }
     });
 
@@ -432,23 +430,23 @@ export default function AtlasMapPage({ username }) {
                     <div className="font-semibold mb-1">Your anime status:</div>
                     <div className="flex flex-wrap gap-3 justify-center">
                       <span className="flex items-center">
-                        <span className="inline-block w-3 h-3 border-2 border-green-700 rounded-full mr-1"></span>
+                        <span className="inline-block w-3 h-3 border-2 border-green-500 rounded-full mr-1"></span>
                         Completed
                       </span>
                       <span className="flex items-center">
-                        <span className="inline-block w-3 h-3 border-2 border-blue-700 rounded-full mr-1"></span>
+                        <span className="inline-block w-3 h-3 border-2 border-blue-500 rounded-full mr-1"></span>
                         Watching
                       </span>
                       <span className="flex items-center">
-                        <span className="inline-block w-3 h-3 border-2 border-yellow-600 rounded-full mr-1"></span>
+                        <span className="inline-block w-3 h-3 border-2 border-yellow-500 rounded-full mr-1"></span>
                         On Hold
                       </span>
                       <span className="flex items-center">
-                        <span className="inline-block w-3 h-3 border-2 border-red-700 rounded-full mr-1"></span>
+                        <span className="inline-block w-3 h-3 border-2 border-red-500 rounded-full mr-1"></span>
                         Plan to Watch
                       </span>
                       <span className="flex items-center">
-                        <span className="inline-block w-3 h-3 border-2 border-gray-600 rounded-full mr-1"></span>
+                        <span className="inline-block w-3 h-3 border-2 border-gray-500 rounded-full mr-1"></span>
                         Dropped
                       </span>
                     </div>

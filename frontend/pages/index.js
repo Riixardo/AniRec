@@ -43,7 +43,7 @@ export default function Index() {
               onChange={(e) => setUsername(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Enter your MyAnimeList username..."
-              className="w-full p-3 rounded-l-sm high-contrast-bg border-y border-l border-gray-600 focus:outline-none text-white text-lg"
+              className="w-full p-3 rounded-l-sm high-contrast-bg border-y border-l border-gray-600 focus:outline-none text-white text-lg placeholder-gray-300 [color:white]"
               autoFocus
             />
             <button
@@ -55,7 +55,10 @@ export default function Index() {
           </div>
           <p className="text-sm text-gray-500 mt-4">Press Enter or click Go</p>
         </div>
-        <p className="text-xs text-gray-500 text-center mt-12 mb-4 w-full">
+        <p className="text-xs text-gray-500 text-center mt-12 w-[45%]">
+          AniRec uses your MyAnimeList profile and a trained machine learning model to generate personalized anime recommendations.
+        </p>
+        <p className="text-xs text-gray-500 text-center w-[45%]">
           Anime information is as of June 2025.
         </p>
       </div>
