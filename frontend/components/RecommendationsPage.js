@@ -74,7 +74,7 @@ export default function RecommendationsPage({
               </div>
               <div className="flex flex-col gap-6">
                 {recommendations.map((anime, index) => (
-                  <AnimeCard key={index} anime={anime} />
+                  <AnimeCard key={anime.anime_id} anime={anime} />
                 ))}
               </div>
 
