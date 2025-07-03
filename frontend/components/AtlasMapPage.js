@@ -258,6 +258,7 @@ export default function AtlasMapPage({ username }) {
 
     // Store selected point data and user's anime data for drawing later
     let selectedPointsData = [];
+    let userWatchedPointsData = [];
 
     // Draw all normal points first
     atlasData.forEach(d => {
@@ -268,10 +269,14 @@ export default function AtlasMapPage({ username }) {
         const radius = radiusScale(d.num_list_users);
         
         // Check if this is the selected point or user's anime
-        if (d.anime_id === currentSelectedPoint || d.user_status) {
+        if (d.anime_id === currentSelectedPoint) {
           // Store data for drawing later
           selectedPointsData.push({ d, cx, cy, radius });
-        } else {
+        } 
+        else if (d.user_status) {
+          userWatchedPointsData.push({ d, cx, cy, radius });
+        }
+        else {
           // Draw normal point
           context.beginPath();
           context.arc(cx, cy, radius, 0, 2 * Math.PI);
@@ -280,9 +285,9 @@ export default function AtlasMapPage({ username }) {
         }
       }
     });
-
+    let combinedPointsData = [...userWatchedPointsData, ...selectedPointsData];
     // Draw all user's anime and selected points last so they appear on top
-    selectedPointsData.forEach(({ d, cx, cy, radius }) => {
+    combinedPointsData.forEach(({ d, cx, cy, radius }) => {
       const isSelected = d.anime_id === currentSelectedPoint;
       
       if (isSelected) {
