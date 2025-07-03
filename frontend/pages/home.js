@@ -261,6 +261,7 @@ export default function HomePage() {
           <button onClick={() => {router.push('/')}} className="text-4xl font-bold text-center glow-text focus:outline-none hover:text-black">
             AniRec
           </button>
+          <img src="/elainagif.gif" alt="Elaina Chibi GIF" className="ml-8 h-24" />
         </div>
       </div>
 

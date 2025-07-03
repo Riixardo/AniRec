@@ -90,9 +90,9 @@ export default function StatisticsPage({ userStats }) {
                 <div key={genre} className="flex items-center justify-between">
                   <span className="text-gray-300">{genre}</span>
                   <div className="flex items-center gap-3">
-                    <div className="w-32 bg-gray-700 rounded-full h-2">
+                    <div className="w-32 bg-gray-700 rounded-[2px] h-2">
                       <div 
-                        className="bg-blue-500 h-2 rounded-full" 
+                        className="bg-blue-500 h-2 rounded-[2px]" 
                         style={{ width: `${preference * 100}%` }}
                       ></div>
                     </div>
@@ -115,9 +115,9 @@ export default function StatisticsPage({ userStats }) {
                   <div key={status} className="flex items-center justify-between">
                     <span className="text-gray-300 w-24">{statusNames[status]}</span>
                     <div className="flex items-center gap-3 flex-1">
-                      <div className="flex-1 bg-gray-700 rounded-full h-2 min-w-0">
+                      <div className="flex-1 bg-gray-700 rounded-[2px] h-2 min-w-0">
                         <div 
-                          className="bg-orange-500 h-2 rounded-full transition-all duration-300"
+                          className="bg-orange-500 h-2 rounded-[2px] transition-all duration-300"
                           style={{ width: `${percentage}%`, minWidth: '2px' }}
                         ></div>
                       </div>
@@ -139,9 +139,9 @@ export default function StatisticsPage({ userStats }) {
                 <div key={score} className="flex items-center justify-between">
                   <span className="text-gray-300 w-8">{score}</span>
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="flex-1 bg-gray-700 rounded-full h-2">
+                    <div className="flex-1 bg-gray-700 rounded-[2px] h-2">
                       <div 
-                        className="bg-green-500 h-2 rounded-full" 
+                        className="bg-green-500 h-2 rounded-[2px]" 
                         style={{ width: `${(count / scored_anime) * 100}%` }}
                       ></div>
                     </div>
