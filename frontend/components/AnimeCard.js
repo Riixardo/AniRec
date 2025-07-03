@@ -21,7 +21,7 @@ const AnimeCard = ({ anime }) => {
   // Reset expansion state when synopsis changes
   useEffect(() => {
     setIsExpanded(false);
-  }, [synopsis]);
+  }, [anime_id]);
 
   // Check if synopsis needs expansion (after render)
   useEffect(() => {
@@ -30,7 +30,7 @@ const AnimeCard = ({ anime }) => {
       // Check if the element is actually truncated (scrollHeight > clientHeight)
       setShowButton(element.scrollHeight > element.clientHeight);
     }
-  }, [synopsis, isExpanded]);
+  }, []);
 
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
