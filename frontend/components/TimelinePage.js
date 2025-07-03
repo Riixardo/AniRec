@@ -79,7 +79,7 @@ export default function TimelinePage({ userAnimeDetails }) {
               </button>
               {showInfo && (
                 <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-lg p-3 w-64 z-50 shadow-lg">
-                  <p>View your watched animeorganized by release season and year. Click on any season to see the anime from that period.</p>
+                  <p>View your watched anime organized by release season and year. Click on any season to see the anime from that period.</p>
                   <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
                 </div>
               )}
@@ -108,7 +108,7 @@ export default function TimelinePage({ userAnimeDetails }) {
             </button>
             {showInfo && (
               <div className="absolute top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs rounded-lg p-3 w-64 z-50 shadow-lg">
-                <p>View your anime recommendations organized by release season and year. Click on any season to see the anime from that period.</p>
+                <p>View your watched anime organized by release season and year. Click on any season to see the anime from that period.</p>
                 <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
               </div>
             )}
