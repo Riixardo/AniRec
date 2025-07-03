@@ -74,10 +74,10 @@ const AnimeCard = ({ anime }) => {
               title="AI Score: How much the recommendation system thinks you'll like this anime based on your MyAnimeList profile"
             >
               AI Score: {score.toFixed(3)}
-              <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10 border border-gray-600">
-                How much the AI thinks you'll like this anime. 0.9 and above is a confident score.
-                <span className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></span>
-              </span>
+                <span className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-black text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-10 border border-gray-600">
+                  How much the AI thinks you&apos;ll like this anime. 0.9 and above is a confident score.
+                  <span className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></span>
+                </span>
             </span>
             <span className="bg-orange-600 px-2 py-1 rounded font-medium">{media_type || 'Unknown'}</span>
             <span className="bg-purple-700 px-2 py-1 rounded font-medium">Users: {num_list_users?.toLocaleString() || 'N/A'}</span>
