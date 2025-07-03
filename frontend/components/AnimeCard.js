@@ -7,6 +7,7 @@ const AnimeCard = ({ anime }) => {
   const synopsisRef = useRef(null);
 
   const {
+    anime_id,
     title,
     score,
     num_list_users,
@@ -61,10 +62,11 @@ const AnimeCard = ({ anime }) => {
         {/* Content Section */}
         <div className="w-4/5 p-4 flex flex-col">
           {/* Header */}
-          <div className="mb-3">
+          <div className="mb-3 flex justify-between">
             <h3 className="text-xl font-bold high-contrast-text mb-1 line-clamp-2">
               {title}
             </h3>
+            <a className="flex justify-center items-center text-gray-400 hover:text-white text-sm font-medium transition-colors text-white bg-[#2e51a2] px-2 py-1 rounded" href={`https://myanimelist.net/anime/${anime_id}`} target="_blank" rel="noopener noreferrer">Link to MAL Page</a>
           </div>
 
           {/* Stats */}

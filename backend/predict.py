@@ -101,6 +101,7 @@ def fetch_recs_from_filters(item_score_pairs_sorted, df, dataset, filters, page,
 
         # If all filters pass, add to list
         recommendation_item = {
+            "anime_id": original_anime_id,
             "title": anime_data.get('title', 'Unknown'),
             "score": score,
             "num_list_users": num_list_users,
@@ -397,6 +398,7 @@ def predict_scores(username, dataset, model, df):
             media_type = anime_data.get('media_type', '')
             
             recommendations.append({
+                "anime_id": original_anime_id,
                 "title": title,
                 "score": score,
                 "num_list_users": num_list_users,
