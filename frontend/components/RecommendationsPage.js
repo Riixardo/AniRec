@@ -19,6 +19,8 @@ export default function RecommendationsPage({
   setMinUsers,
   maxUsers,
   setMaxUsers,
+  filterSequels,
+  setFilterSequels,
   onApplyFilters,
   onPageChange,
   totalPages
@@ -35,6 +37,8 @@ export default function RecommendationsPage({
         setMinUsers={setMinUsers}
         maxUsers={maxUsers}
         setMaxUsers={setMaxUsers}
+        filterSequels={filterSequels}
+        setFilterSequels={setFilterSequels}
         onApplyFilters={onApplyFilters}
       />
 

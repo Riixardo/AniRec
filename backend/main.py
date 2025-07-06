@@ -13,7 +13,7 @@ from predict import predict_scores, fetch_recs_from_filters, get_user_anime_stat
 
 BACKEND_DIR = Path(__file__).resolve().parent
 
-CSV_FILE_PATH = BACKEND_DIR / "data" / "anime_data_with_images.csv"
+CSV_FILE_PATH = BACKEND_DIR / "data" / "anime_data_master.csv"
 MODEL_SAVE_PATH = BACKEND_DIR / "model_files" / "lightfm_anime_model.pkl"
 DATASET_SAVE_PATH = BACKEND_DIR / "model_files" / "lightfm_anime_dataset.pkl"
 ATLAS_DATA_PATH = BACKEND_DIR / "data" / "atlas_data.csv"
@@ -129,6 +129,7 @@ class FilteredPredictRequest(BaseModel):
     selected_media_types: List[str] = []
     min_users: int = 0
     max_users: int = 4200000
+    filter_sequels: bool = False
     page: int = 1
 
 @app.post("/predict/filtered")
@@ -142,6 +143,7 @@ async def predict_filtered(request: FilteredPredictRequest):
             "media_types": request.selected_media_types,
             "min_users": request.min_users,
             "max_users": request.max_users,
+            "filter_sequels": request.filter_sequels,
         },
         page=request.page,
         page_size=20

@@ -9,6 +9,8 @@ export default function Filter({
   setMinUsers, 
   maxUsers, 
   setMaxUsers, 
+  filterSequels,
+  setFilterSequels,
   onApplyFilters 
 }) {
   const [showGenreModal, setShowGenreModal] = useState(false);
@@ -84,6 +86,7 @@ export default function Filter({
     setSelectedMediaTypes([]);
     setMinUsers(0);
     setMaxUsers(4200000);
+    setFilterSequels(false);
   };
 
   const handleApplyFilters = () => {
@@ -96,6 +99,25 @@ export default function Filter({
       <div className="w-full lg:w-80 high-contrast-bg p-4 sm:p-6 lg:min-h-0 lg:overflow-y-auto">
         <h2 className="text-xl font-bold mb-4 high-contrast-text">Filters</h2>
         
+        {/* Sequel Filter - At the top */}
+        <div className="mb-4">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="text-lg font-semibold high-contrast-text">Sequels</h3>
+          </div>
+          
+          <div className="flex items-center space-x-3 p-3 hover:bg-gray-700 rounded">
+            <input
+              type="checkbox"
+              checked={filterSequels}
+              onChange={(e) => setFilterSequels(e.target.checked)}
+              className="rounded border-gray-600 bg-gray-700 text-gray-400 focus:ring-gray-500"
+            />
+            <span className="text-sm text-gray-300">
+              Only show first seasons
+            </span>
+          </div>
+        </div>
+
         {/* Genres Filter */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-3">

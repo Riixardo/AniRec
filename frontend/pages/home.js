@@ -19,6 +19,7 @@ export default function HomePage() {
   const [selectedMediaTypes, setSelectedMediaTypes] = useState([]);
   const [minUsers, setMinUsers] = useState(0);
   const [maxUsers, setMaxUsers] = useState(4200000);
+  const [filterSequels, setFilterSequels] = useState(false);
   const [userStats, setUserStats] = useState(null);
   const [userAnimeDetails, setUserAnimeDetails] = useState([]);
 
@@ -69,6 +70,7 @@ export default function HomePage() {
     setSelectedMediaTypes([]);
     setMinUsers(0);
     setMaxUsers(4200000);
+    setFilterSequels(false);
 
     if (!finalUsername.trim()) {
       setError('Please enter a username.');
@@ -118,6 +120,7 @@ export default function HomePage() {
           selected_media_types: selectedMediaTypes,
           min_users: minUsers,
           max_users: maxUsers,
+          filter_sequels: filterSequels,
           page: 1,
         }),
       });
@@ -154,6 +157,7 @@ export default function HomePage() {
           selected_media_types: selectedMediaTypes,
           min_users: minUsers,
           max_users: maxUsers,
+          filter_sequels: filterSequels,
           page: newPage,
         }),
       });
@@ -209,6 +213,8 @@ export default function HomePage() {
           onApplyFilters={handleApplyFilters}
           onPageChange={handlePageChange}
           totalPages={totalPages}
+          filterSequels={filterSequels}
+          setFilterSequels={setFilterSequels}
         />;
       case 'statistics':
         return <StatisticsPage userStats={userStats} />;
@@ -237,6 +243,8 @@ export default function HomePage() {
           onApplyFilters={handleApplyFilters}
           onPageChange={handlePageChange}
           totalPages={totalPages}
+          filterSequels={filterSequels}
+          setFilterSequels={setFilterSequels}
         />;
     }
   };

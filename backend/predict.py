@@ -8,8 +8,10 @@ from scipy.sparse import csr_matrix
 import copy
 from collections import Counter
 
+# TODO: ADD SAFETY FOR UNSEEN FUTURE ANIME IDS AND BAD ANIME IDS
+
 # Anime ids that are in the model but not in the current dataset
-BAD_ANIME_IDS = [51563, 52401, 52257, 51210]
+BAD_ANIME_IDS = [51563, 52401, 52257, 51210, 5742, 50898]
 
 load_dotenv()  
 
@@ -98,6 +100,13 @@ def fetch_recs_from_filters(item_score_pairs_sorted, df, dataset, filters, page,
         num_list_users = anime_data.get('num_list_users', 0)
         if not (min_users <= num_list_users <= max_users):
             continue
+
+        # Relationship filter (sequel filter)
+        filter_sequels = filters.get("filter_sequels", False)
+        if filter_sequels:
+            relationship = anime_data.get('relationship', '')
+            if relationship != 's1':
+                continue
 
         # If all filters pass, add to list
         recommendation_item = {
