@@ -62,11 +62,21 @@ const AnimeCard = ({ anime }) => {
         {/* Content Section */}
         <div className="w-4/5 p-4 flex flex-col">
           {/* Header */}
-          <div className="mb-3 flex justify-between">
-            <h3 className="text-xl font-bold high-contrast-text mb-1 line-clamp-2">
+          <div className="w-full mb-3 flex justify-between items-start gap-4">
+            {/* Use flex-1 to take up available space, remove w-[80%] */}
+            <h3 className="text-xl font-bold high-contrast-text mb-1">
               {title}
             </h3>
-            <a className="flex justify-center items-center text-gray-400 hover:text-white text-sm font-medium transition-colors text-white bg-[#2e51a2] px-2 py-1 rounded" href={`https://myanimelist.net/anime/${anime_id}`} target="_blank" rel="noopener noreferrer">Link to MAL Page</a>
+
+            {/* Add flex-shrink-0 to prevent the button from ever shrinking */}
+            <a 
+              className="flex-shrink-0 flex justify-center items-center text-sm font-medium transition-colors text-white bg-[#2e51a2] hover:bg-[#3a6aff] px-2 py-1 rounded" 
+              href={`https://myanimelist.net/anime/${anime_id}`} 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              Link to MAL Page
+            </a>
           </div>
 
           {/* Stats */}

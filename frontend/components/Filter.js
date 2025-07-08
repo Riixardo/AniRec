@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Filter({ 
   selectedGenres, 
@@ -50,6 +50,15 @@ export default function Filter({
         : [...prev, mediaType]
     );
   };
+
+  // Auto-disable special when filterSequels is enabled
+  useEffect(() => {
+    if (filterSequels) {
+      setSelectedMediaTypes(prev => 
+        prev.filter(m => m !== 'special')
+      );
+    }
+  }, [filterSequels]);
 
   const formatUserCount = (count) => {
     if (count >= 1000000) {
@@ -158,18 +167,43 @@ export default function Filter({
           </div>
           
           <div className="flex flex-wrap gap-2">
-            {mediaTypes.map((mediaType) => (
-              <label key={mediaType} className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-700 rounded">
-                <input
-                  type="checkbox"
-                  checked={selectedMediaTypes.includes(mediaType)}
-                  onChange={() => handleMediaTypeToggle(mediaType)}
-                  className="rounded border-gray-600 bg-gray-700 text-gray-400 focus:ring-gray-500"
-                />
-                <span className="text-sm text-gray-300">{mediaType}</span>
-              </label>
-            ))}
+            {mediaTypes.map((mediaType) => {
+              const isDisabled = filterSequels && mediaType === 'special';
+              const isChecked = selectedMediaTypes.includes(mediaType);
+              
+              return (
+                <label 
+                  key={mediaType} 
+                  className={`flex items-center space-x-2 cursor-pointer p-2 rounded transition-colors ${
+                    isDisabled 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:bg-gray-700'
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={isChecked}
+                    onChange={() => handleMediaTypeToggle(mediaType)}
+                    disabled={isDisabled}
+                    className={`rounded border-gray-600 bg-gray-700 text-gray-400 focus:ring-gray-500 ${
+                      isDisabled ? 'cursor-not-allowed' : ''
+                    }`}
+                  />
+                  <span className={`text-sm ${
+                    isDisabled ? 'text-gray-500' : 'text-gray-300'
+                  }`}>
+                    {mediaType}
+                  </span>
+                </label>
+              );
+            })}
           </div>
+          
+          {filterSequels && (
+            <p className="text-xs text-gray-400 mt-2">
+              Special is disabled when filtering for first seasons only
+            </p>
+          )}
         </div>
 
         {/* User Count Filter */}
