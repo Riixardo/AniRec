@@ -35,7 +35,7 @@ export default function TimelinePage({ userAnimeDetails }) {
     });
 
     // Sort by year (descending) and season
-    const seasonOrder = { 'winter': 1, 'spring': 2, 'summer': 3, 'fall': 4 };
+    const seasonOrder = { 'winter': 4, 'spring': 3, 'summer': 2, 'fall': 1 };
     return Object.values(seasonGroups)
       .sort((a, b) => {
         if (a.year !== b.year) return b.year - a.year; // Most recent first
